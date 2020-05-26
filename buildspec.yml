@@ -28,7 +28,7 @@ phases:
       # builds
       #- celery -A celery_worker.celery worker --loglevel=DEBUG
       #- bert-serving-start -model_dir uncased_L-12_H-768_A-12/ -num_worker 1
-      - gunicorn app:app
+      - python3 app.py
 artificats:
   files:
     - "**/*"
