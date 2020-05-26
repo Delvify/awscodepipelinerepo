@@ -1,10 +1,36 @@
 version: 0.2
+
 phases:
   install:
-    runtime-versions:
-      python: 3.8
+    commands:
+      # install python
+      - echo Installing Python3.7.....
+      - apt install software-properties-common build-essential
+      - apt install gcc g++
+      - add-apt-repository ppa:deadsnakes/ppa
+      - apt update
+      - apt install python3.7 -y
+      - apt-get install portaudio19-dev python-pyaudio -y
+      - apt-get install ffmpeg -y
+      - apt-get install -y unzip
+      # install rabbitmq
+      - apt install rabbitmq-server -y
+      - wget https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip
+      - unzip uncased_L-12_H-768_A-12.zip
   pre_build:
     commands:
+      - # install dependencies
+      - echo Installing Dependencies....
       - pip install -r requirements.txt
-      - python app_test.py
-
+  build:
+    commands:
+      # tests
+      # builds
+      #- celery -A celery_worker.celery worker --loglevel=DEBUG
+      #- bert-serving-start -model_dir uncased_L-12_H-768_A-12/ -num_worker 1
+      - gunicorn --bind 0.0.0.0:5000 -w 6 run:app
+artificats:
+  files:
+    - "**/*"
+  discard-paths: no
+  base-directory: dist
